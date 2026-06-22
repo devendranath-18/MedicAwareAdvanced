@@ -3,9 +3,7 @@ import SearchBar from "@/components/SearchBar";
 export default function MedicinePage() {
   return (
     <main
-     className="
-min-h-screen
-bg-gradient-to-r
+      className="min-h-screen bg-gradient-to-r
 from-cyan-700
 to-blue-500
 text-white
@@ -35,7 +33,7 @@ text-center
       </h1>
 
       <p
-       className="
+        className="
 text-sm
 sm:text-base
 md:text-lg
@@ -48,12 +46,10 @@ md:mb-14
 px-2
 "
       >
-        Search medicines and understand
-        their uses, side effects and reviews
+        Search medicines and understand their uses, side effects and reviews
       </p>
 
       <SearchBar />
-
     </main>
   );
 }

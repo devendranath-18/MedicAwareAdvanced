@@ -18,33 +18,25 @@ export default function MedicineDetails({
 
   const fetchMedicine = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/medicines/${id}`
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/medicines/${id}`);
 
       const data = await response.json();
 
       setMedicine(data.data);
-
     } catch (error) {
       console.log(error);
-
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return (
-      <div className="p-10 text-center">
-        Loading...
-      </div>
-    );
+    return <div className="p-10 text-center">Loading...</div>;
   }
 
   return (
     <main
-className="
+      className="
 min-h-screen
 
 bg-blue-500
@@ -54,10 +46,9 @@ md:px-8
 py-6
 md:py-10
 "
->
-
-<div
-className="
+    >
+      <div
+        className="
 max-w-6xl
 mx-auto
 bg-white
@@ -67,12 +58,11 @@ p-5
 sm:p-8
 md:p-10
 "
->
-
-<img
-src={medicine.image_url}
-alt={medicine.medicine_name}
-className="
+      >
+        <img
+          src={medicine.image_url}
+          alt={medicine.medicine_name}
+          className="
 w-32
 h-32
 sm:w-44
@@ -82,10 +72,9 @@ md:h-56
 object-contain
 mx-auto
 "
-/>
-
-<h1
-className="
+        />
+        <h1
+          className="
 text-2xl
 sm:text-3xl
 md:text-4xl
@@ -94,52 +83,48 @@ text-center
 mt-6
 break-words
 "
->
-{medicine.medicine_name}
-</h1>
-
-
+        >
+          {medicine.medicine_name}
+        </h1>
         <div className="space-y-8 mt-10">
-
-  <div>
-    <h2 className="
+          <div>
+            <h2
+              className="
 text-lg
 md:text-xl
 font-bold
 mb-3
-">
-      Composition
-    </h2>
+"
+            >
+              Composition
+            </h2>
 
-    <div className="
+            <div
+              className="
 bg-blue-50
 p-4
 rounded-xl
 text-sm
 md:text-base
 break-words
-">
-      {medicine.composition}
-    </div>
-  </div>
+"
+            >
+              {medicine.composition}
+            </div>
+          </div>
 
+          <div>
+            <h2 className="text-xl font-bold mb-3">Uses</h2>
 
-  <div>
-    <h2 className="text-xl font-bold mb-3">
-      Uses
-    </h2>
+            <div className="flex flex-wrap gap-3">
+              {medicine.uses
+                ?.replace(/([a-z])([A-Z])/g, "$1,$2")
+                .split(",")
 
-    <div className="flex flex-wrap gap-3">
-
-      {medicine.uses
-        ?.replace(/([a-z])([A-Z])/g,"$1,$2")
-        .split(",")
-
-        .map((use:string,index:number)=>(
-
-          <span
-            key={index}
-           className="
+                .map((use: string, index: number) => (
+                  <span
+                    key={index}
+                    className="
 bg-green-100
 text-green-800
 px-3
@@ -149,32 +134,23 @@ rounded-full
 text-sm
 md:text-base
 "
-          >
-            {use.trim()}
-          </span>
+                  >
+                    {use.trim()}
+                  </span>
+                ))}
+            </div>
+          </div>
 
-      ))}
+          <div>
+            <h2 className="text-xl font-bold mb-3">Side Effects</h2>
 
-    </div>
-  </div>
-
-
-  <div>
-  <h2 className="text-xl font-bold mb-3">
-    Side Effects
-  </h2>
-
-  <div className="flex flex-wrap gap-3">
-
-    {medicine.side_effects
-      ?.match(
-        /[A-Z][a-z]+(?:\s[a-z]+)*/g
-      )
-      ?.map(
-        (effect:string,index:number)=>(
-          <span
-            key={index}
-           className="
+            <div className="flex flex-wrap gap-3">
+              {medicine.side_effects
+                ?.match(/[A-Z][a-z]+(?:\s[a-z]+)*/g)
+                ?.map((effect: string, index: number) => (
+                  <span
+                    key={index}
+                    className="
 bg-red-100
 text-red-700
 px-3
@@ -184,42 +160,37 @@ rounded-full
 text-sm
 md:text-base
 "
-          >
-            {effect}
-          </span>
-      ))}
+                  >
+                    {effect}
+                  </span>
+                ))}
+            </div>
+          </div>
 
-  </div>
-</div>
+          <div>
+            <h2 className="text-xl font-bold mb-3">Manufacturer</h2>
 
-
-
-
-  <div>
-    <h2 className="text-xl font-bold mb-3">
-      Manufacturer
-    </h2>
-
-    <div className="
+            <div
+              className="
 bg-gray-100
 p-4
 rounded-xl
 text-sm
 md:text-base
 break-words
-">
-      {medicine.manufacturer}
-    </div>
-  </div>
+"
+            >
+              {medicine.manufacturer}
+            </div>
+          </div>
 
-    <div className="border-t ">
-    <ReviewSection
-      medicineId={id}
-    />
-  </div>
-
-        </div> {/* closes space-y-8 mt-10 */}
-      </div> {/* closes max-w-6xl container */}
+          <div className="border-t ">
+            <ReviewSection medicineId={id} />
+          </div>
+        </div>{" "}
+        {/* closes space-y-8 mt-10 */}
+      </div>{" "}
+      {/* closes max-w-6xl container */}
     </main>
   );
 }

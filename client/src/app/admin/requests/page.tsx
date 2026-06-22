@@ -1,6 +1,5 @@
 "use client";
-import AdminProtectedRoute
-from "@/components/AdminProtectedRoute";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -12,65 +11,44 @@ interface Request {
 }
 
 export default function RequestsPage() {
-
   const router = useRouter();
 
-  const [requests, setRequests] =
-  useState<Request[]>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
 
-  const [loading, setLoading] =
-  useState(true);
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchRequests = async () => {
-
       try {
+        const token = localStorage.getItem("adminToken");
 
-       const token=
-localStorage.getItem(
-"adminToken"
-);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/requests`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-const response=await fetch(
-"http://localhost:5000/api/admin/requests",
-{
-headers:{
-Authorization:
-`Bearer ${token}`
-}
-}
-);
-
-        const data =
-        await response.json();
+        const data = await response.json();
 
         setRequests(data.data);
-
       } catch (error) {
-
         console.log(error);
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
     fetchRequests();
-
   }, []);
 
-
   if (loading) {
-
     return (
-<AdminProtectedRoute>
-      <div
-className="
+      <AdminProtectedRoute>
+        <div
+          className="
 min-h-screen
 flex
 justify-center
@@ -82,84 +60,46 @@ from-slate-900
 via-blue-900
 to-indigo-950
 "
->
-
-        Loading...
-
-      </div>
-</AdminProtectedRoute>
+        >
+          Loading...
+        </div>
+      </AdminProtectedRoute>
     );
-
   }
 
-const handleReject=
-async(id:number)=>{
+  const handleReject = async (id: number) => {
+    try {
+      const token = localStorage.getItem("adminToken");
 
-try{
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/reject/${id}`,
 
-const token=
-localStorage.getItem(
-"adminToken"
-);
+        {
+          method: "PUT",
 
-const response=
-await fetch(
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-`http://localhost:5000/api/admin/reject/${id}`,
+      const data = await response.json();
 
-{
+      if (data.success) {
+        toast.success("Request rejected ✅");
 
-method:"PUT",
+        setRequests((prev) => prev.filter((item) => item.id !== id));
+      }
+    } catch (error) {
+      console.log(error);
 
-headers:{
-
-Authorization:
-`Bearer ${token}`
-
-}
-
-}
-
-);
-
-const data=
-await response.json();
-
-if(data.success){
-
-toast.success(
-"Request rejected ✅"
-);
-
-setRequests((prev)=>
-
-prev.filter(
-
-(item)=>
-item.id!==id
-
-)
-
-);
-
-}
-
-}
-catch(error){
-
-console.log(error);
-
-toast.error(
-"Failed to reject ❌"
-);
-
-}
-
-};
+      toast.error("Failed to reject ❌");
+    }
+  };
   return (
-<AdminProtectedRoute>
-    <main
-    className="
+    <AdminProtectedRoute>
+      <main
+        className="
     min-h-screen
     bg-gradient-to-br
     from-slate-900
@@ -168,33 +108,26 @@ toast.error(
     p-10
     text-white
     "
-    >
-
-      <h1
-      className="
+      >
+        <h1
+          className="
       text-5xl
       font-bold
       mb-10
       "
-      >
+        >
+          Medicine Requests
+        </h1>
 
-        Medicine Requests
-
-      </h1>
-
-
-      <div
-      className="
+        <div
+          className="
       space-y-6
       "
-      >
-
-        {requests.map((request) => (
-
-          <div
-          key={request.id}
-
-          className="
+        >
+          {requests.map((request) => (
+            <div
+              key={request.id}
+              className="
           bg-white/10
           backdrop-blur-xl
           rounded-3xl
@@ -206,53 +139,40 @@ toast.error(
           justify-between
           items-center
           "
-          >
-
-            <div>
-
-              <h2
-              className="
+            >
+              <div>
+                <h2
+                  className="
               text-2xl
               font-semibold
               "
-              >
+                >
+                  {request.medicine_name}
+                </h2>
 
-                {request.medicine_name}
-
-              </h2>
-
-              <p
-              className="
+                <p
+                  className="
               text-gray-300
               mt-2
               "
-              >
+                >
+                  Status: {request.status}
+                </p>
+              </div>
 
-                Status: {request.status}
-
-              </p>
-
-            </div>
-
-
-            <div
-            className="
+              <div
+                className="
             flex
             gap-4
             "
-            >
-
-              <button
-
-              onClick={() =>
-
-                router.push(
-                  `/admin/add-medicine?id=${request.id}&name=${request.medicine_name}`
-                )
-
-              }
-
-              className="
+              >
+                <button
+                  onClick={() =>
+                    router.push(
+                      `/admin/add-medicine?id=${request.id}&name=${request.medicine_name}`,
+                    )
+                  }
+                  className="
               px-6
               py-3
               rounded-xl
@@ -260,21 +180,13 @@ toast.error(
               hover:scale-105
               transition
               "
-              >
+                >
+                  Add Medicine
+                </button>
 
-                Add Medicine
-
-              </button>
-
-<button
-
-onClick={()=>
-handleReject(
-request.id
-)
-}
-
-className="
+                <button
+                  onClick={() => handleReject(request.id)}
+                  className="
 px-6
 py-3
 rounded-xl
@@ -282,23 +194,14 @@ bg-red-500
 hover:scale-105
 transition
 "
-
->
-
-Reject
-
-</button>
-
+                >
+                  Reject
+                </button>
+              </div>
             </div>
-
-          </div>
-
-        ))}
-
-      </div>
-
-    </main>
-</AdminProtectedRoute>
+          ))}
+        </div>
+      </main>
+    </AdminProtectedRoute>
   );
-
 }
