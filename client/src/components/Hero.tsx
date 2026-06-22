@@ -31,7 +31,7 @@ mb-5
 text-center
 "
 >
-        MedAware AI
+        MedicAware
       </h1>
 
       <p

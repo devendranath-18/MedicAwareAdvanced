@@ -5,137 +5,90 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 export default function SearchBar() {
-
   const router = useRouter();
 
-  const [search,setSearch] = useState("");
-  const [debouncedSearch,setDebouncedSearch] =
-  useState("");
-const [showRequest,setShowRequest]=
-useState(false);
-  const [suggestions,setSuggestions] =
-  useState([]);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [showRequest, setShowRequest] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
-  useEffect(()=>{
-
-    const timer=setTimeout(()=>{
-
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setDebouncedSearch(search);
+    }, 500);
 
-    },500);
+    return () => clearTimeout(timer);
+  }, [search]);
+  const requestMedicine = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/requests`,
+        {
+          method: "POST",
 
-    return ()=>clearTimeout(timer);
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-  },[search]);
-const requestMedicine=async()=>{
+          body: JSON.stringify({
+            medicine_name: search,
+          }),
+        },
+      );
 
-try{
+      const data = await response.json();
 
-const response=await fetch(
-"http://localhost:5000/api/requests",
-{
-method:"POST",
+      if (data.success) {
+        toast.success("Medicine request submitted successfully ✅");
 
-headers:{
-"Content-Type":"application/json"
-},
+        setSearch("");
+        setSuggestions([]);
+        setShowRequest(false);
+      }
+    } catch (error) {
+      console.log(error);
 
-body:JSON.stringify({
-medicine_name:search
-})
+      toast.error("Failed to submit request ❌");
+    }
+  };
 
-}
-);
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!debouncedSearch.trim()) {
+        setSuggestions([]);
+        setShowRequest(false);
 
-const data=await response.json();
-
-if(data.success){
-
-toast.success(
-"Medicine request submitted successfully ✅"
-);
-
-setSearch("");
-setSuggestions([]);
-setShowRequest(false);
-
-}
-
-}
-catch(error){
-
-console.log(error);
-
-toast.error(
-"Failed to submit request ❌"
-);
-
-}
-
-};
-
-  useEffect(()=>{
-
-    const fetchSuggestions=async()=>{
-
-     if(!debouncedSearch.trim()){
-
-    setSuggestions([]);
-    setShowRequest(false);
-
-    return;
-
-}
-      try{
-
-        const response=await fetch(
-        `http://localhost:5000/api/medicines/suggestions?query=${debouncedSearch}`
+        return;
+      }
+      try {
+        const response = await fetch(
+          `h${process.env.NEXT_PUBLIC_API_URL}/api/medicines/suggestions?query=${debouncedSearch}`,
         );
 
-        const data=await response.json();
-setSuggestions(data);
+        const data = await response.json();
+        setSuggestions(data);
 
-if(
-debouncedSearch.trim() &&
-data.length===0
-){
-
-setShowRequest(true);
-
-}
-else{
-
-setShowRequest(false);
-
-}
-
-      }
-      catch(error){
-
+        if (debouncedSearch.trim() && data.length === 0) {
+          setShowRequest(true);
+        } else {
+          setShowRequest(false);
+        }
+      } catch (error) {
         console.log(error);
-
       }
-
     };
 
     fetchSuggestions();
-
-  },[debouncedSearch]);
-
-
+  }, [debouncedSearch]);
 
   return (
-
     <div className="relative w-full max-w-5xl">
-
       <input
-      type="text"
-      placeholder="Search medicines..."
-      value={search}
-      onChange={(e)=>
-      setSearch(e.target.value)
-      }
-      className="
+        type="text"
+        placeholder="Search medicines..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="
       w-full
       py-6
       px-10
@@ -150,7 +103,7 @@ setShowRequest(false);
       />
 
       <Search
-      className="
+        className="
       absolute
       right-8
       top-1/2
@@ -159,10 +112,9 @@ setShowRequest(false);
       "
       />
 
-      {suggestions.length>0 && (
-
+      {suggestions.length > 0 && (
         <div
-        className="
+          className="
         absolute
         w-full
         bg-white
@@ -172,39 +124,25 @@ setShowRequest(false);
         overflow-hidden
         "
         >
-
-        {suggestions.map((item:any)=>(
-
-        <div
-        key={item.id}
-
-        onClick={()=>
-        router.push(
-        `/medicine/${item.id}`
-        )
-        }
-
-        className="
+          {suggestions.map((item: any) => (
+            <div
+              key={item.id}
+              onClick={() => router.push(`/medicine/${item.id}`)}
+              className="
         p-4
         cursor-pointer
         hover:bg-gray-100
         text-black
         "
-        >
-
-        {item.medicine_name}
-
+            >
+              {item.medicine_name}
+            </div>
+          ))}
         </div>
-
-        ))}
-
-        </div>
-
       )}
-{showRequest && (
-
-<div
-className="
+      {showRequest && (
+        <div
+          className="
 mt-6
 bg-white/10
 backdrop-blur-xl
@@ -214,36 +152,29 @@ border
 border-white/20
 text-center
 "
->
-
-<h2
-className="
+        >
+          <h2
+            className="
 text-2xl
 font-bold
 mb-3
 "
->
+          >
+            Sorry, Medicine not found
+          </h2>
 
-Sorry 😔 Medicine not found
-
-</h2>
-
-<p
-className="
+          <p
+            className="
 text-blue-100
 mb-6
 "
->
+          >
+            Wanted to add for future users, Your response will help us.
+          </p>
 
-Want this medicine added for future users?
-
-</p>
-
-<button
-
-onClick={requestMedicine}
-
-className="
+          <button
+            onClick={requestMedicine}
+            className="
 px-8
 py-3
 rounded-full
@@ -253,17 +184,11 @@ font-semibold
 hover:scale-105
 transition
 "
-
->
-
-Request Medicine
-
-</button>
-
-</div>
-
-)}
+          >
+            Request Medicine
+          </button>
+        </div>
+      )}
     </div>
-
   );
 }

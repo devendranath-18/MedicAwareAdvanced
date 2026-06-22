@@ -25,7 +25,7 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <h2 className="text-2xl font-bold mb-3">
-            MedAware AI
+            MedicAware
           </h2>
           <p className="text-white/80">
             Making medicine information simple,
@@ -59,7 +59,7 @@ export default function Footer() {
           </h3>
 
           <p className="text-white/80">
-            Email: support@medaware.ai
+            Email: support@medicaware.ai
           </p>
 
           <p className="text-white/80 mt-2">
@@ -70,7 +70,7 @@ export default function Footer() {
 
       {/* Bottom line */}
       <div className="text-center mt-10 text-white/60 text-sm">
-        © {new Date().getFullYear()} MedAware AI. All rights reserved.
+        © {new Date().getFullYear()} MedicAware AI. All rights reserved.
       </div>
     </footer>
   );

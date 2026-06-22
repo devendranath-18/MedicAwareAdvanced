@@ -29,7 +29,7 @@ md:text-3xl
 font-bold
 "
 >
-        MedAware AI
+        MedicAware
       </h1>
 
      <div
