@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useLanguage }
+from "@/context/LanguageContext";
+
+import { translations }
+from "@/constants/translations";
 export default function SearchBar() {
   const router = useRouter();
 
@@ -11,7 +16,16 @@ export default function SearchBar() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [showRequest, setShowRequest] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+const {
+language
+}
+=
+useLanguage();
 
+const t =
+translations[
+language as keyof typeof translations
+];
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -85,7 +99,7 @@ export default function SearchBar() {
     <div className="relative w-full max-w-5xl">
       <input
         type="text"
-        placeholder="Search medicines..."
+        placeholder={t.searchPlaceholder}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="

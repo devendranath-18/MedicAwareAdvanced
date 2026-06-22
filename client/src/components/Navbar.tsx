@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
-
+;
+import { translations } from "@/constants/translations";
+import { useLanguage } from "@/context/LanguageContext";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 export default function Navbar() {
-  const [language, setLanguage] =
-    useState("English");
-
+  const { language, setLanguage } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+  const pathname = usePathname();
   return (
-   <nav
-className="
+    <nav
+      className="
 flex
 flex-col
 md:flex-row
@@ -21,19 +24,28 @@ md:py-6
 border-b
 gap-4
 "
->
-      <h1
+    >
+      <Link href="/">
+
+<h1
 className="
 text-2xl
 md:text-3xl
 font-bold
+cursor-pointer
+hover:opacity-80
+transition
 "
 >
-        MedicAware
-      </h1>
 
-     <div
-className="
+{t.title}
+
+</h1>
+
+</Link>
+
+      <div
+        className="
 flex
 flex-wrap
 justify-center
@@ -44,41 +56,52 @@ md:gap-8
 w-full
 md:w-auto
 "
->
-        <button
+      >
+       <Link
+href="/about"
 className="
 hover:text-blue-500
 text-sm
 md:text-base
 "
 >
-          About Us
-        </button>
+{t.about}
+</Link>
 
-        <button
+<Link
+href="/services"
 className="
 hover:text-blue-500
 text-sm
 md:text-base
 "
 >
-          Services
-        </button>
+{t.services}
+</Link>
 
-       <button
+<Link
+href="/features"
 className="
 hover:text-blue-500
 text-sm
 md:text-base
 "
 >
-          Features
-        </button>
+{t.features}
+</Link>
+{pathname === "/" && (
 
-        <select
+<select
 value={language}
 onChange={(e)=>
-setLanguage(e.target.value)
+setLanguage(
+e.target.value as
+"English" |
+"Telugu" |
+"Hindi" |
+"Tamil" |
+"Kannada"
+)
 }
 className="
 border
@@ -93,20 +116,30 @@ text-sm
 md:text-base
 "
 >
-          <option>
-            English
-          </option>
 
-          <option>
-            Telugu
-          </option>
+<option value="English">
+English
+</option>
 
-          <option>
-            Hindi
-          </option>
+<option value="Telugu">
+తెలుగు
+</option>
 
-        </select>
+<option value="Hindi">
+हिंदी
+</option>
 
+<option value="Tamil">
+தமிழ்
+</option>
+
+<option value="Kannada">
+ಕನ್ನಡ
+</option>
+
+</select>
+
+)}
       </div>
     </nav>
   );

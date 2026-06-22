@@ -1,10 +1,15 @@
 "use client";
-
+import { useLanguage } from "@/context/LanguageContext";
 import { useRouter } from "next/navigation";
+import { translations } from "@/constants/translations";
 
 export default function Hero() {
   const router = useRouter();
 
+  const { language } = useLanguage();
+
+  
+  const t = translations[language as keyof typeof translations];
   return (
     <section
       className="
@@ -21,7 +26,7 @@ export default function Hero() {
       "
     >
       <h1
-className="
+        className="
 text-3xl
 sm:text-4xl
 md:text-5xl
@@ -30,12 +35,12 @@ font-bold
 mb-5
 text-center
 "
->
-        MedicAware
+      >
+        {t.title}
       </h1>
 
       <p
-className="
+        className="
 text-sm
 sm:text-base
 md:text-lg
@@ -45,14 +50,12 @@ text-center
 mb-12
 px-2
 "
->
-        Understand medicines in simple language
-        and make medicine information accessible
-        for everyone.
+      >
+        {t.heroDescription}
       </p>
 
       <div
-className="
+        className="
 grid
 grid-cols-1
 md:grid-cols-2
@@ -60,12 +63,9 @@ gap-6
 w-full
 max-w-5xl
 "
->
-
+      >
         <div
-          onClick={() =>
-            router.push("/medicine")
-          }
+          onClick={() => router.push("/medicine")}
           className="
           bg-white/10
           backdrop-blur-md
@@ -76,66 +76,59 @@ max-w-5xl
           transition
           "
         >
-         <h2
-className="
+          <h2
+            className="
 text-xl
 md:text-3xl
 font-bold
 "
->
-            Medicine Search
-          </h2>
-
-         <p
-className="
-mt-4
-text-sm
-md:text-base
-"
->
-            Search medicines and learn
-            about uses, side effects,
-            manufacturers and reviews.
-          </p>
-        </div>
-
-        <div
-          onClick={() =>
-            router.push("/scanner")
-          }
-          className="
-          bg-white/10
-          backdrop-blur-md
-          p-6 md:p-10
-          rounded-2xl
-          cursor-pointer
-          hover:scale-105
-          transition
-          "
-        >
-      <h2
-className="
-text-xl
-md:text-3xl
-font-bold
-"
->
-            Prescription Scanner
+          >
+            {t.medicineSearch}
           </h2>
 
           <p
-className="
+            className="
 mt-4
 text-sm
 md:text-base
 "
->
-            Upload prescriptions and
-            detect medicines automatically
-            using OCR.
+          >
+            {t.medicineDescription}
           </p>
         </div>
 
+        <div
+          onClick={() => router.push("/scanner")}
+          className="
+          bg-white/10
+          backdrop-blur-md
+          p-6 md:p-10
+          rounded-2xl
+          cursor-pointer
+          hover:scale-105
+          transition
+          "
+        >
+          <h2
+            className="
+text-xl
+md:text-3xl
+font-bold
+"
+          >
+            {t.scanner}
+          </h2>
+
+          <p
+            className="
+mt-4
+text-sm
+md:text-base
+"
+          >
+            {t.scannerDescription}
+          </p>
+        </div>
       </div>
     </section>
   );

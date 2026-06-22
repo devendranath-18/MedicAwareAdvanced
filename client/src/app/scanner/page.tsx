@@ -3,12 +3,26 @@ import Tesseract from "tesseract.js";
 import { useState } from "react";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
+import { useLanguage }
+from "@/context/LanguageContext";
+
+import { translations }
+from "@/constants/translations";
 export default function ScannerPage() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [medicines, setMedicines] = useState<any[]>([]);
   const [extractedText, setExtractedText] = useState("");
+const {
+language
+}
+=
+useLanguage();
 
+const t =
+translations[
+language as keyof typeof translations
+];
   const scanPrescription = async () => {
     if (!image) return;
 
@@ -95,7 +109,7 @@ text-center
 mb-3
 "
         >
-          Prescription Scanner
+          {t.prescriptionScanner}
         </h1>
 
         <p
@@ -109,7 +123,7 @@ md:mb-10
 px-2
 "
         >
-          Upload a prescription image to scan medicines
+          {t.prescriptionScanner}
         </p>
 
         <label
@@ -147,7 +161,7 @@ md:text-lg
 text-center
 "
           >
-            Click to upload prescription
+           {t.uploadPrescription}
           </p>
         </label>
 

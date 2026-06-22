@@ -1,6 +1,12 @@
 "use client";
+import { useLanguage } from "@/context/LanguageContext";
 
+import { translations } from "@/constants/translations";
+import Link from "next/link";
 export default function Footer() {
+  const { language } = useLanguage();
+
+  const t = translations[language as keyof typeof translations];
   return (
     <footer
       className="
@@ -24,53 +30,40 @@ export default function Footer() {
       >
         {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold mb-3">
-            MedicAware
-          </h2>
-          <p className="text-white/80">
-            Making medicine information simple,
-            accessible, and understandable for everyone.
-          </p>
+          <h2 className="text-2xl font-bold mb-3">{t.title}</h2>
+          <p className="text-white/80">{t.footerDescription}</p>
         </div>
 
         {/* Links */}
         <div>
-          <h3 className="text-xl font-semibold mb-3">
-            Quick Links
-          </h3>
+          <h3 className="text-xl font-semibold mb-3">{t.quickLinks}</h3>
 
           <ul className="space-y-2 text-white/80">
+           <Link href="/medicine">
+{t.footermedicineSearch}
+</Link>
             <li className="hover:text-white cursor-pointer">
-              Medicine Search
+                <Link  href="/scanner" >
+              {t.footerscanner}
+              </Link>
             </li>
-            <li className="hover:text-white cursor-pointer">
-              Prescription Scanner
-            </li>
-            <li className="hover:text-white cursor-pointer">
-              About
-            </li>
+            <li className="hover:text-white cursor-pointer">{t.about}</li>
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-          <h3 className="text-xl font-semibold mb-3">
-            Contact
-          </h3>
+          <h3 className="text-xl font-semibold mb-3">{t.contact}</h3>
 
-          <p className="text-white/80">
-            Email: support@medicaware.ai
-          </p>
+          <p className="text-white/80">Email: support@medicaware.ai</p>
 
-          <p className="text-white/80 mt-2">
-            Built with Next.js + AI
-          </p>
+          <p className="text-white/80 mt-2">{t.builtWith}</p>
         </div>
       </div>
 
       {/* Bottom line */}
       <div className="text-center mt-10 text-white/60 text-sm">
-        © {new Date().getFullYear()} MedicAware AI. All rights reserved.
+        © {new Date().getFullYear()} {t.title}.{t.rights}
       </div>
     </footer>
   );

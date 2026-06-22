@@ -1,9 +1,25 @@
+"use client";
+
 import SearchBar from "@/components/SearchBar";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/constants/translations";
 
 export default function MedicinePage() {
-  return (
-    <main
-      className="min-h-screen bg-gradient-to-r
+
+const { language } =
+useLanguage();
+
+const t =
+translations[
+language as keyof typeof translations
+];
+
+return (
+
+<main
+className="
+min-h-screen
+bg-gradient-to-r
 from-cyan-700
 to-blue-500
 text-white
@@ -16,9 +32,10 @@ px-4
 sm:px-6
 md:px-8
 "
-    >
-      <h1
-        className="
+>
+
+<h1
+className="
 text-3xl
 sm:text-4xl
 md:text-5xl
@@ -28,12 +45,12 @@ mb-5
 tracking-tight
 text-center
 "
-      >
-        Search Medicine
-      </h1>
+>
+{t.searchMedicine}
+</h1>
 
-      <p
-        className="
+<p
+className="
 text-sm
 sm:text-base
 md:text-lg
@@ -45,11 +62,14 @@ mb-10
 md:mb-14
 px-2
 "
-      >
-        Search medicines and understand their uses, side effects and reviews
-      </p>
+>
+{t.searchMedicineDescription}
+</p>
 
-      <SearchBar />
-    </main>
-  );
+<SearchBar/>
+
+</main>
+
+);
+
 }
