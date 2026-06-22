@@ -4,7 +4,7 @@ MedicAware is a healthcare-focused web platform designed to simplify medicine-re
 
 ## 🚀 Live Demo
 
-🔗 Add your deployed link here
+🔗 medic-aware-advanced.vercel.app
 
 ## 📌 Problem Statement
 
