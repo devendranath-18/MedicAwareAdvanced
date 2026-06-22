@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useLanguage }
-from "@/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
-import { translations }
-from "@/constants/translations";
+import { translations } from "@/constants/translations";
 export default function SearchBar() {
   const router = useRouter();
 
@@ -16,16 +14,9 @@ export default function SearchBar() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [showRequest, setShowRequest] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-const {
-language
-}
-=
-useLanguage();
+  const { language } = useLanguage();
 
-const t =
-translations[
-language as keyof typeof translations
-];
+  const t = translations[language as keyof typeof translations];
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -76,7 +67,7 @@ language as keyof typeof translations
       }
       try {
         const response = await fetch(
-          `h${process.env.NEXT_PUBLIC_API_URL}/api/medicines/suggestions?query=${debouncedSearch}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/medicines/suggestions?query=${debouncedSearch}`,
         );
 
         const data = await response.json();
