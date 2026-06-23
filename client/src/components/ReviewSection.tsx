@@ -54,7 +54,7 @@ useState(false);
     try{
 
       await fetch(
-      "http://localhost:5000/api/medicines/review",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/medicines/review`,
       {
         method:"POST",
 
