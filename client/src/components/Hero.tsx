@@ -45,9 +45,7 @@ export default function Hero() {
   {/* Hero Content */}
   <div className="relative z-10 flex flex-col items-center">
     
-    <div className="mb-4 px-4 py-2 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-300">
-      Trusted Healthcare Information
-    </div>
+   
 
     <h1
       className="
