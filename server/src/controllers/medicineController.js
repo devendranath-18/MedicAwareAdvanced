@@ -29,7 +29,7 @@ export const searchMedicine = async (req, res) => {
       ORDER BY medicine_name
       LIMIT 10
       `,
-      [`%${name}%`]
+      [`%${name}%`],
     );
 
     res.status(200).json({
@@ -37,7 +37,6 @@ export const searchMedicine = async (req, res) => {
       count: result.rows.length,
       data: result.rows,
     });
-
   } catch (error) {
     console.log("Search error:", error.message);
 
@@ -65,11 +64,10 @@ export const getSuggestions = async (req, res) => {
       WHERE medicine_name ILIKE $1
       LIMIT 5
       `,
-      [`${query}%`]
+      [`${query}%`],
     );
 
     res.json(result.rows);
-
   } catch (error) {
     console.log("Suggestion error:", error.message);
 
@@ -86,7 +84,7 @@ export const requestMedicine = async (req, res) => {
     if (!medicine_name?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Medicine name required"
+        message: "Medicine name required",
       });
     }
 
@@ -96,23 +94,22 @@ export const requestMedicine = async (req, res) => {
       FROM missing_medicine_requests
       WHERE LOWER(medicine_name)=LOWER($1)
       `,
-      [medicine_name]
+      [medicine_name],
     );
 
     if (existing.rows.length > 0) {
-
       await pool.query(
         `
         UPDATE missing_medicine_requests
         SET request_count=request_count+1
         WHERE LOWER(medicine_name)=LOWER($1)
         `,
-        [medicine_name]
+        [medicine_name],
       );
 
       return res.json({
-        success:true,
-        message:"Request updated successfully"
+        success: true,
+        message: "Request updated successfully",
       });
     }
 
@@ -123,28 +120,24 @@ export const requestMedicine = async (req, res) => {
       )
       VALUES($1)
       `,
-      [medicine_name]
+      [medicine_name],
     );
 
     res.json({
-      success:true,
-      message:"Medicine request submitted"
+      success: true,
+      message: "Medicine request submitted",
     });
-
-  } catch(error){
-
+  } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      success:false,
-      message:"Internal Server Error"
+      success: false,
+      message: "Internal Server Error",
     });
-
   }
 };
 export const getMedicineById = async (req, res) => {
   try {
-
     const { id } = req.params;
 
     const result = await pool.query(
@@ -153,147 +146,100 @@ export const getMedicineById = async (req, res) => {
       FROM medicines
       WHERE id=$1
       `,
-      [id]
+      [id],
     );
 
-    if(result.rows.length===0){
-
+    if (result.rows.length === 0) {
       return res.status(404).json({
-        success:false,
-        message:"Medicine not found"
+        success: false,
+        message: "Medicine not found",
       });
-
     }
 
     res.json({
-      success:true,
-      data:result.rows[0]
+      success: true,
+      data: result.rows[0],
     });
-
-  } catch(error){
-
+  } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      success:false,
-      message:"Internal Server Error"
+      success: false,
+      message: "Internal Server Error",
     });
-
   }
 };
-export const addReview=async(req,res)=>{
 
-try{
+export const addReview = async (req, res) => {
+  try {
+    
 
-const {medicine_id,rating,review}
-= req.body;
+    const { medicine_id, rating, review } = req.body;
 
-const result=await pool.query(
+    const result = await pool.query(
+      `
+      INSERT INTO reviews
+      (medicine_id,rating,review)
 
-`
-INSERT INTO reviews
-(medicine_id,rating,review)
+      VALUES($1,$2,$3)
 
-VALUES($1,$2,$3)
+      RETURNING *
+      `,
+      [medicine_id, rating, review]
+    );
 
-RETURNING *
-`,
+    res.status(201).json({
+      success: true,
+      data: result.rows[0],
+    });
 
-[
-medicine_id,
-rating,
-review
-]
+  } catch(error) {
+    
 
-);
 
-res.status(201).json({
-
-success:true,
-data:result.rows[0]
-
-});
-
-}
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-success:false,
-message:error.message
-
-});
-
-}
-
+    res.status(500).json({
+      success:false,
+      message:error.message
+    });
+  }
 };
+export const getReviews = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-
-
-export const getReviews=async(req,res)=>{
-
-try{
-
-const {id}=req.params;
-
-const result=await pool.query(
-
-`
+    const result = await pool.query(
+      `
 SELECT *
 FROM reviews
 WHERE medicine_id=$1
 ORDER BY created_at DESC
 `,
 
-[id]
+      [id],
+    );
 
-);
-
-res.json({
-
-success:true,
-data:result.rows
-
-});
-
-}
-catch(error){
-
-console.log(error);
-
-}
-
+    res.json({
+      success: true,
+      data: result.rows,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
-export const scanMedicines =
-async(req,res)=>{
+export const scanMedicines = async (req, res) => {
+  try {
+    const { text } = req.body;
 
-try{
+    const words = text
+      .split(/[\n,]/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 2);
 
-const {text}=req.body;
+    let matchedMedicines = [];
 
-const words=
-
-text
-.split(/[\n,]/)
-.map(
-(item)=>
-item.trim()
-)
-.filter(
-(item)=>
-item.length>2
-);
-
-let matchedMedicines=[];
-
-for(const word of words){
-
-const result=
-await pool.query(
-
-`
+    for (const word of words) {
+      const result = await pool.query(
+        `
 SELECT *
 FROM medicines
 WHERE similarity(
@@ -310,51 +256,25 @@ DESC
 
 LIMIT 1
 `,
-[word]
+        [word],
+      );
 
-);
+      matchedMedicines.push(...result.rows);
+    }
 
-matchedMedicines.push(
-...result.rows
-);
+    const unique = [
+      ...new Map(matchedMedicines.map((item) => [item.id, item])).values(),
+    ];
 
-}
+    res.json({
+      success: true,
+      data: unique,
+    });
+  } catch (error) {
+    console.log(error);
 
-const unique=[
-
-...new Map(
-
-matchedMedicines.map(
-
-(item)=>[
-item.id,
-item
-]
-
-)
-
-).values()
-
-];
-
-res.json({
-
-success:true,
-data:unique
-
-});
-
-}
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-success:false
-
-});
-
-}
-
+    res.status(500).json({
+      success: false,
+    });
+  }
 };
