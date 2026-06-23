@@ -31,7 +31,7 @@ useState(false);
     try{
 
       const response=await fetch(
-      `http://localhost:5000/api/medicines/${medicineId}/reviews`
+      `{process.env.NEXT_PUBLIC_API_URL}/api/medicines/${medicineId}/reviews`
       );
 
       const data=await response.json();
