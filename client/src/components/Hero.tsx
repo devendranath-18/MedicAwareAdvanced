@@ -35,7 +35,7 @@ export default function Hero() {
       blur-[3px]
     "
     style={{
-      backgroundImage: "url('/hero-medical.jpg')",
+      backgroundImage: "url('/herotemplate.jpg')",
     }}
   />
 
