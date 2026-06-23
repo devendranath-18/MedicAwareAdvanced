@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
-import {
-LanguageProvider
-}
-from "@/context/LanguageContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 const geistSans = Geist({
@@ -35,10 +32,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
-          <Navbar/>
-        {children}
-        <Footer />
-        <Toaster />
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster />
         </LanguageProvider>
       </body>
     </html>

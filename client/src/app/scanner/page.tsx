@@ -3,26 +3,17 @@ import Tesseract from "tesseract.js";
 import { useState } from "react";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useLanguage }
-from "@/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
-import { translations }
-from "@/constants/translations";
+import { translations } from "@/constants/translations";
 export default function ScannerPage() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [medicines, setMedicines] = useState<any[]>([]);
   const [extractedText, setExtractedText] = useState("");
-const {
-language
-}
-=
-useLanguage();
+  const { language } = useLanguage();
 
-const t =
-translations[
-language as keyof typeof translations
-];
+  const t = translations[language as keyof typeof translations];
   const scanPrescription = async () => {
     if (!image) return;
 
@@ -33,17 +24,20 @@ language as keyof typeof translations
       const text = result.data.text;
 
       setExtractedText(text);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/medicines/scan`, {
-        method: "POST",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/medicines/scan`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            text,
+          }),
         },
-
-        body: JSON.stringify({
-          text,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -161,7 +155,7 @@ md:text-lg
 text-center
 "
           >
-           {t.uploadPrescription}
+            {t.uploadPrescription}
           </p>
         </label>
 

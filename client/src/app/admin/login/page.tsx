@@ -17,18 +17,21 @@ export default function AdminLogin() {
     try {
       setLoading(true);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/login`, {
-        method: "POST",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/login`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            username,
+            password,
+          }),
         },
-
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
+      );
 
       const data = await response.json();
 

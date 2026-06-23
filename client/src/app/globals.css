@@ -46,6 +46,14 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-health-50: oklch(0.97 0.02 195);
+  --color-health-100: oklch(0.93 0.04 195);
+  --color-health-200: oklch(0.86 0.07 195);
+  --color-health-500: oklch(0.55 0.12 195);
+  --color-health-600: oklch(0.48 0.11 195);
+  --color-health-700: oklch(0.42 0.1 195);
+  --color-health-800: oklch(0.35 0.08 195);
+  --color-health-900: oklch(0.28 0.06 210);
 }
 
 :root {
@@ -125,6 +133,65 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
   }
+}
+
+@layer utilities {
+  .health-gradient {
+    @apply bg-gradient-to-br from-health-700 via-health-600 to-cyan-600;
+  }
+
+  .health-gradient-soft {
+    @apply bg-gradient-to-b from-health-50 to-white;
+  }
+
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+
+  .glass-card-light {
+    @apply bg-white/90 backdrop-blur-md border border-health-100 shadow-lg;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out both;
+  }
+
+  .animate-fade-up-delay-1 {
+    animation: fade-up 0.6s ease-out 0.1s both;
+  }
+
+  .animate-fade-up-delay-2 {
+    animation: fade-up 0.6s ease-out 0.2s both;
+  }
+
+  .animate-fade-up-delay-3 {
+    animation: fade-up 0.6s ease-out 0.3s both;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 4s ease-in-out infinite;
 }

@@ -1,75 +1,43 @@
 "use client";
 
 import SearchBar from "@/components/SearchBar";
-import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/constants/translations";
+import { useLanguage } from "@/context/LanguageContext";
+import { Search } from "lucide-react";
 
 export default function MedicinePage() {
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
 
-const { language } =
-useLanguage();
+  return (
+    <main className="relative min-h-screen health-gradient text-white">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.12) 1px, transparent 0)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-const t =
-translations[
-language as keyof typeof translations
-];
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:px-8">
+        <div className="animate-fade-up mb-4 flex size-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm">
+          <Search className="size-7" />
+        </div>
 
-return (
+        <h1 className="animate-fade-up-delay-1 text-center text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+          {t.searchMedicine}
+        </h1>
 
-<main
-className="
-min-h-screen
-bg-gradient-to-r
-from-cyan-700
-to-blue-500
-text-white
-flex
-flex-col
-items-center
-pt-16
-md:pt-24
-px-4
-sm:px-6
-md:px-8
-"
->
+        <p className="animate-fade-up-delay-2 mt-4 max-w-2xl px-2 text-center text-sm leading-relaxed text-white/85 sm:text-base md:text-lg lg:text-xl">
+          {t.searchMedicineDescription}
+        </p>
 
-<h1
-className="
-text-3xl
-sm:text-4xl
-md:text-5xl
-lg:text-6xl
-font-extrabold
-mb-5
-tracking-tight
-text-center
-"
->
-{t.searchMedicine}
-</h1>
-
-<p
-className="
-text-sm
-sm:text-base
-md:text-lg
-lg:text-xl
-text-blue-100
-text-center
-max-w-2xl
-mb-10
-md:mb-14
-px-2
-"
->
-{t.searchMedicineDescription}
-</p>
-
-<SearchBar/>
-
-</main>
-
-);
-
+        <div className="animate-fade-up-delay-3 mt-10 w-full md:mt-14">
+          <SearchBar />
+        </div>
+      </div>
+    </main>
+  );
 }

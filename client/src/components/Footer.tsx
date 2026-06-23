@@ -39,13 +39,9 @@ export default function Footer() {
           <h3 className="text-xl font-semibold mb-3">{t.quickLinks}</h3>
 
           <ul className="space-y-2 text-white/80">
-           <Link href="/medicine">
-{t.footermedicineSearch}
-</Link>
+            <Link href="/medicine">{t.footermedicineSearch}</Link>
             <li className="hover:text-white cursor-pointer">
-                <Link  href="/scanner" >
-              {t.footerscanner}
-              </Link>
+              <Link href="/scanner">{t.footerscanner}</Link>
             </li>
             <li className="hover:text-white cursor-pointer">{t.about}</li>
           </ul>
